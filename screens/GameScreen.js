@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, View, Alert } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, View, Text, Alert, FlatList } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import Title from "../components/ui/Title";
 import NumberContainer from "../components/game/NumberContainer";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -23,6 +23,7 @@ let maxBoundary = 100;
 function GameScreen({ userNumber, onGameOver }) {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [guessRounds, setGuessRounds] = useState([initialGuess]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
@@ -33,7 +34,7 @@ function GameScreen({ userNumber, onGameOver }) {
   useEffect(() => {
     minBoundary = 1;
     maxBoundary = 100;
-  }, [])
+  }, []);
 
   function nextGuessHandler(direction) {
     if (
@@ -58,6 +59,7 @@ function GameScreen({ userNumber, onGameOver }) {
       currentGuess
     );
     setCurrentGuess(newRndNumber);
+    setGuessRounds((prevGuessRounds) => [newRndNumber, ...prevGuessRounds]);
   }
 
   return (
@@ -65,7 +67,9 @@ function GameScreen({ userNumber, onGameOver }) {
       <Title>Opponent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card>
-        <InstructionText style={styles.instructionText}>Higher or lower?</InstructionText>
+        <InstructionText style={styles.instructionText}>
+          Higher or lower?
+        </InstructionText>
         <View style={styles.buttonsContainer}>
           <View>
             <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
@@ -74,12 +78,19 @@ function GameScreen({ userNumber, onGameOver }) {
           </View>
           <View>
             <PrimaryButton onPress={nextGuessHandler.bind(this, "higher")}>
-            <Ionicons name="md-add" size={24} color="white" />
+              <Ionicons name="md-add" size={24} color="white" />
             </PrimaryButton>
           </View>
         </View>
       </Card>
-      <View></View>
+      <View>
+        {/* {guessRounds.map(guessRound => <Text key={guessRound}>{guessRound}</Text>)} */}
+        <FlatList
+          data={guessRounds}
+          renderItem={(itemData) => <Text>{itemData.item.value}</Text>}
+          keyExtractor={(item) => item}
+        />
+      </View>
     </View>
   );
 }
