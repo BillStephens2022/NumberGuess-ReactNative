@@ -5,7 +5,6 @@ import {
   Alert,
   FlatList,
   useWindowDimensions,
-  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Title from "../components/ui/Title";
@@ -120,7 +119,6 @@ function GameScreen({ userNumber, onGameOver }) {
     <View style={styles.screen}>
       <Title>Opponent's Guess</Title>
       {content}
-      <ScrollView>
         <View style={styles.listContainer}>
           {/* {guessRounds.map(guessRound => <Text key={guessRound}>{guessRound}</Text>)} */}
           <FlatList
@@ -134,7 +132,6 @@ function GameScreen({ userNumber, onGameOver }) {
             keyExtractor={(item) => item}
           />
         </View>
-      </ScrollView>
     </View>
   );
 }
